@@ -3,138 +3,166 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Каталог мероприятий</title>
-
+    <title>Каталог мероприятий университета</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #f0f4f8;
+            background: #f4f5fb;
+            margin: 0;
             padding: 20px;
+            color: #252545;
         }
-
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
         h1 {
-            color: #284b80;
             text-align: center;
+            color: #5146a5;
         }
-
-        input, button {
-            padding: 10px;
-            margin: 5px 0;
-            width: 100%;
-            box-sizing: border-box;
-        }
-
-        .event {
+        .card {
             background: white;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px #ddd;
+        }
+        input, button {
+            box-sizing: border-box;
+            width: 100%;
             padding: 12px;
+            margin: 6px 0;
+            border-radius: 7px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        button {
+            background: #6558c9;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #493da5;
+        }
+        .event {
+            background: #f0efff;
+            padding: 14px;
             margin: 10px 0;
             border-radius: 8px;
         }
-
-        button {
-            background: #284b80;
-            color: white;
-            border: none;
+        .event h3 {
+            margin-top: 0;
+        }
+        .delete {
+            background: #c94d62;
+        }
+        #message {
+            color: #b52f45;
         }
     </style>
 </head>
-
 <body>
-
-    <h1>Каталог мероприятий университета</h1>
-
-    <h3>Поиск мероприятия</h3>
-    <input id="search" placeholder="Введите название">
-    <button onclick="searchEvents()">Найти</button>
-
-    <div id="list"></div>
-
-    <h3>Добавить мероприятие</h3>
-    <input id="title" placeholder="Название мероприятия">
-    <input id="date" type="date">
-    <input id="place" placeholder="Место проведения">
-
-    <button onclick="addEvent()">Добавить</button>
-
+    <div class="container">
+        <h1>Каталог мероприятий университета</h1>
+        <p style="text-align:center">
+            Находи интересные события и добавляй новые мероприятия!
+        </p>
+        <div class="card">
+            <h2>Поиск мероприятий</h2>
+            <input id="search" type="text"
+                   placeholder="Введите название мероприятия">
+            <button onclick="renderEvents()">Найти</button>
+            <button onclick="clearSearch()">Показать все мероприятия</button>
+        </div>
+        <div class="card">
+            <h2>Добавить мероприятие</h2>
+            <input id="title" type="text"
+                   placeholder="Название мероприятия">
+            <input id="date" type="date">
+            <input id="place" type="text"
+                   placeholder="Место проведения">
+            <button onclick="addEvent()">Добавить</button>
+            <p id="message"></p>
+        </div>
+        <div class="card">
+            <h2>Список мероприятий</h2>
+            <p id="count"></p>
+            <div id="events"></div>
+        </div>
+    </div>
     <script>
         let events = [
             {
                 title: "День первокурсника",
-                date: "2026-10-25",
-                place: "Актовый зал"
-            },
-            {
-                title: "Научная конференция",
-                date: "2026-11-05",
+                date: "2026-09-01",
                 place: "Главный корпус"
             },
             {
+                title: "Научная конференция",
+                date: "2026-10-20",
+                place: "Актовый зал"
+            },
+            {
                 title: "Спортивный день",
-                date: "2026-11-12",
-                place: "Спортивный зал"
+                date: "2026-10-25",
+                place: "Спортивный комплекс"
             }
         ];
-
-        function showEvents(list) {
-            let area = document.getElementById("list");
-            area.innerHTML = "";
-
-            if (list.length === 0) {
-                area.textContent = "Мероприятия не найдены";
-                return;
-            }
-
-            list.forEach(function(event) {
-                let card = document.createElement("div");
-                card.className = "event";
-
-                card.textContent =
-                    event.title + " | " +
-                    event.date + " | " +
-                    event.place;
-
-                area.appendChild(card);
-            });
-        }
-
-        function searchEvents() {
-            let text = document.getElementById("search")
+        function renderEvents() {
+            let searchText = document.getElementById("search")
                 .value.trim().toLowerCase();
-
-            let result = events.filter(function(event) {
-                return event.title.toLowerCase().includes(text);
+            let filteredEvents = events.filter(function(event) {
+                return event.title.toLowerCase().includes(searchText);
             });
-
-            showEvents(result);
+            let list = document.getElementById("events");
+            list.innerHTML = "";
+            filteredEvents.forEach(function(event) {
+                let item = document.createElement("div");
+                item.className = "event";
+                let title = document.createElement("h3");
+                title.textContent = event.title;
+                let date = document.createElement("p");
+                date.textContent = "Дата: " + event.date;
+                let place = document.createElement("p");
+                place.textContent = "Место: " + event.place;
+                item.appendChild(title);
+                item.appendChild(date);
+                item.appendChild(place);
+                list.appendChild(item);
+            });
+            document.getElementById("count").textContent =
+                "Найдено мероприятий: " + filteredEvents.length;
+            if (filteredEvents.length === 0) {
+                list.textContent = "Мероприятия не найдены.";
+            }
         }
-
+        function clearSearch() {
+            document.getElementById("search").value = "";
+            renderEvents();
+        }
         function addEvent() {
             let title = document.getElementById("title").value.trim();
             let date = document.getElementById("date").value;
             let place = document.getElementById("place").value.trim();
-
+            let message = document.getElementById("message");
             if (title === "" || date === "" || place === "") {
-                alert("Заполните все поля");
+                message.textContent =
+                    "Заполните название, дату и место проведения.";
                 return;
             }
-
             events.push({
                 title: title,
                 date: date,
                 place: place
             });
-
-            showEvents(events);
-
             document.getElementById("title").value = "";
             document.getElementById("date").value = "";
             document.getElementById("place").value = "";
-
-            alert("Мероприятие добавлено");
+            message.textContent = "Мероприятие успешно добавлено!";
+            renderEvents();
         }
-
-        showEvents(events);
+        renderEvents();
     </script>
-
 </body>
 </html>
