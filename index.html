@@ -3,24 +3,138 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Мероприятия университета</title>
-</head>
-<body>
-    <h1>Каталог мероприятий университета</h1>
-<input id="search" placeholder="Поиск мероприятия">
-<button onclick="searchEvent()">Найти</button>
-<p id="result">День первокурсника, Научная конференция, Спортивный день</p>
-<script>
-    function searchEvent() {
-        let name = document.getElementById("search").value;
-        if (name === "") {
-            document.getElementById("result").textContent =
-                "Введите название мероприятия";
-        } else {
-            document.getElementById("result").textContent =
-                "Вы ищете: " + name;
+    <title>Каталог мероприятий</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f4f8;
+            padding: 20px;
         }
-    }
-</script>
+
+        h1 {
+            color: #284b80;
+            text-align: center;
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 5px 0;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .event {
+            background: white;
+            padding: 12px;
+            margin: 10px 0;
+            border-radius: 8px;
+        }
+
+        button {
+            background: #284b80;
+            color: white;
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h1>Каталог мероприятий университета</h1>
+
+    <h3>Поиск мероприятия</h3>
+    <input id="search" placeholder="Введите название">
+    <button onclick="searchEvents()">Найти</button>
+
+    <div id="list"></div>
+
+    <h3>Добавить мероприятие</h3>
+    <input id="title" placeholder="Название мероприятия">
+    <input id="date" type="date">
+    <input id="place" placeholder="Место проведения">
+
+    <button onclick="addEvent()">Добавить</button>
+
+    <script>
+        let events = [
+            {
+                title: "День первокурсника",
+                date: "2026-10-25",
+                place: "Актовый зал"
+            },
+            {
+                title: "Научная конференция",
+                date: "2026-11-05",
+                place: "Главный корпус"
+            },
+            {
+                title: "Спортивный день",
+                date: "2026-11-12",
+                place: "Спортивный зал"
+            }
+        ];
+
+        function showEvents(list) {
+            let area = document.getElementById("list");
+            area.innerHTML = "";
+
+            if (list.length === 0) {
+                area.textContent = "Мероприятия не найдены";
+                return;
+            }
+
+            list.forEach(function(event) {
+                let card = document.createElement("div");
+                card.className = "event";
+
+                card.textContent =
+                    event.title + " | " +
+                    event.date + " | " +
+                    event.place;
+
+                area.appendChild(card);
+            });
+        }
+
+        function searchEvents() {
+            let text = document.getElementById("search")
+                .value.trim().toLowerCase();
+
+            let result = events.filter(function(event) {
+                return event.title.toLowerCase().includes(text);
+            });
+
+            showEvents(result);
+        }
+
+        function addEvent() {
+            let title = document.getElementById("title").value.trim();
+            let date = document.getElementById("date").value;
+            let place = document.getElementById("place").value.trim();
+
+            if (title === "" || date === "" || place === "") {
+                alert("Заполните все поля");
+                return;
+            }
+
+            events.push({
+                title: title,
+                date: date,
+                place: place
+            });
+
+            showEvents(events);
+
+            document.getElementById("title").value = "";
+            document.getElementById("date").value = "";
+            document.getElementById("place").value = "";
+
+            alert("Мероприятие добавлено");
+        }
+
+        showEvents(events);
+    </script>
+
 </body>
 </html>
