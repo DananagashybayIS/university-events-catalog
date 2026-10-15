@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Мероприятия университета</title>
+</head>
+<body>
+    <h1>Каталог мероприятий университета</h1>
+<input id="search" placeholder="Поиск мероприятия">
+<button onclick="searchEvent()">Найти</button>
+<p id="result">День первокурсника, Научная конференция, Спортивный день</p>
+<script>
+    function searchEvent() {
+        let name = document.getElementById("search").value;
+        if (name === "") {
+            document.getElementById("result").textContent =
+                "Введите название мероприятия";
+        } else {
+            document.getElementById("result").textContent =
+                "Вы ищете: " + name;
+        }
+    }
+</script>
+</body>
+</html>
